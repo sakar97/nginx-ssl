@@ -1,0 +1,28 @@
+---
+    - name: Install bottle python package
+      ansible.builtin.pip:
+        name: pyOpenSSL
+    - name: Creating dir
+      file:
+        state: directory
+        path: "{{ ssl_dir }}"
+    - name: Generate an OpenSSL private key
+      openssl_privatekey:
+        path: "{{ssl_dir }}/{{ server_hostname }}_privkey.pem"
+        size: "{{ key_size }}"
+        type: "{{ key_type }}"
+        backup: yes
+    - name: Generate an OpenSSL Certificate Signing Request with Subject information
+      openssl_csr:
+        path: "{{ ssl_dir }}/{{ server_hostname }}.csr"
+        privatekey_path: "{{ ssl_dir }}/{{ server_hostname }}_privkey.pem"
+        country_name: "{{ country_name }}"
+        organization_name: "{{ organization_name }}"
+        email_address: "{{ email_address }}"
+        common_name: "{{ server_hostname }}"
+    - name: Generate a Self Signed OpenSSL certificate
+      openssl_certificate:
+        path: "{{ ssl_dir }}/{{ server_hostname }}_cert.pem"
+        privatekey_path: "{{ ssl_dir }}/{{ server_hostname }}_privkey.pem"
+        csr_path: "{{ ssl_dir }}/{{ server_hostname }}.csr"
+        provider: selfsigned

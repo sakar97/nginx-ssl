@@ -1,0 +1,14 @@
+---
+ - hosts: localhost
+   vars:
+    - server_hostname: nginx
+    - key_size: 4096
+    - passphrase: # Set if you want passphrase
+    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+    - country_name: IN
+    - email_address: admin@testingansible.com
+    - organization_name: AnsibleTest
+    - ssl_dir: "/etc/nginx/ssl"
+   tasks:
+       - include_role: 
+            name: nginx_ssl

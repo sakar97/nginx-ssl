@@ -1,0 +1,13 @@
+---
+# tasks file for nginx_ssl
+#
+- name: include task
+  include_tasks: ssl_cert.yml
+
+- name: sending conf file
+  template:
+     src: "nginx_ssl.conf.j2"
+     dest: /etc/nginx/sites-enabled/nginx.conf
+     remote_src: yes
+- name: restat nginx
+  shell: systemctl restart nginx
